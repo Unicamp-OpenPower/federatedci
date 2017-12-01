@@ -1,0 +1,38 @@
+BUILDBOT WORKER CONFIGURATION
+
+---------
+INTRODUTION
+
+Welcome to this document. Once you are reading this, I suppose you're using a snapshot created for Validation Project: Built on Power.
+Due to this snapshot, all dependecies are already installed and you just might have to update the system. If you are not using a snapshot or you want to know the dependecies installed, this document has a section 'General System Information' which will explain the steps it was used to set the system. 
+
+--------
+BUILDBOT WORKER
+
+Once Buildbot Worker is already installed, you just have to configure it by connecting the worker to Buildbot Master. 
+For this, you should change directory to 'buildbot' by using:
+
+	cd buildbot
+
+and run the command:
+
+	buildbot-worker create-worker worker $master_connection $worker_name $worker_pass
+
+Notice that you should replace the $variables:
+-$master_connection: how you connect your worker to the master. It can be by the master IP, for instance. If you're working for Validation Project, you should replace it for the current internal IP of the project
+
+
+-$worker_name and $worker_pass: the name and the password which are registered on master. You should receive these information by the Master manager.
+
+--------
+
+GENERAL SYSTEM INFORMATION
+
+This snapshot was created using a Fedora 26 distro and ppcle64 arch. It also has 10GB as memory and 1GB RAM, which means you can use this snapshot with any flavour that has at least this configuration. 
+For setting the system, we used the commands below:
+
+	dnf update
+	dnf install gcc python2-devel redhat-rpm-config python2-setuptools
+	easy_install buildbot-worker
+	mkdir ~/buildbot
+
