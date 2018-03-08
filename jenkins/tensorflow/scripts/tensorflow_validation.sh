@@ -1,0 +1,9 @@
+#!/bin/sh
+cd tensorflow_cpu01
+bazel clean --async
+export USER=jenkins
+export TF_BUILD_CONTAINER_TYPE=CPU
+export TF_BUILD_PYTHON_VERSION=PYTHON2
+export TF_BUILD_IS_OPT=OPT
+export TF_BUILD_IS_PIP=NO_PIP
+bazel test -c opt --local_resources 2046,.5,1.0 --config=gcp --config=hdfs --test_tag_filters=-no_oss,-oss_serial,-benchmark-test --distinct_host_configuration=false -- //tensorflow/... -//tensorflow/compiler/... -//tensorflow/contrib/lite/... //tensorflow/contrib/lite:context_test //tensorflow/contrib/lite:framework //tensorflow/contrib/lite:interpreter_test //tensorflow/contrib/lite:model_test //tensorflow/contrib/lite/toco:toco //tensorflow/contrib/lite:simple_memory_arena_test //tensorflow/contrib/lite:string_util_test //tensorflow/contrib/lite/kernels:activations_test //tensorflow/contrib/lite/kernels:add_test //tensorflow/contrib/lite/kernels:basic_rnn_test //tensorflow/contrib/lite/kernels:concatenation_test //tensorflow/contrib/lite/kernels:conv_test //tensorflow/contrib/lite/kernels:depthwise_conv_test //tensorflow/contrib/lite/kernels:embedding_lookup_test //tensorflow/contrib/lite/kernels:embedding_lookup_sparse_test //tensorflow/contrib/lite/kernels:fully_connected_test //tensorflow/contrib/lite/kernels:hashtable_lookup_test //tensorflow/contrib/lite/kernels:local_response_norm_test //tensorflow/contrib/lite/kernels:lsh_projection_test //tensorflow/contrib/lite/kernels:lstm_test //tensorflow/contrib/lite/kernels:l2norm_test //tensorflow/contrib/lite/kernels:mul_test //tensorflow/contrib/lite/kernels:pooling_test //tensorflow/contrib/lite/kernels:reshape_test //tensorflow/contrib/lite/kernels:resize_bilinear_test //tensorflow/contrib/lite/kernels:skip_gram_test //tensorflow/contrib/lite/kernels:softmax_test //tensorflow/contrib/lite/kernels:space_to_depth_test //tensorflow/contrib/lite/kernels:svdf_test

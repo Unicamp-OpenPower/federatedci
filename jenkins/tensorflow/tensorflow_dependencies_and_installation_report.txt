@@ -1,0 +1,69 @@
+https://www.tensorflow.org/install/install_sources
+https://docs.bazel.build/versions/master/install-compile-source.html
+https://www.ibm.com/developerworks/community/blogs/fe313521-2e95-46f2-817d-44a4f27eba32/entry/Building_TensorFlow_on_OpenPOWER_Linux_Systems?lang=en #ibm source about Tensorflow installation. Provides interesting information about bazel installation on ppc.
+https://github.com/tensorflow/tensorflow/issues/7979#issuecomment-283559640
+
+***** TENSORFLOW: *****
+git clone https://github.com/tensorflow/tensorflow
+
+- it's only supported by Ubuntu 14.04 or Ubuntu 16.04 (tried Ubuntu 17 and it didnt work)
+
+***** Dependencies: *****
+
+$ sudo apt-get install python-numpy python-dev python-pip python-wheel (python 2.7) -------- python3 didnt work. On Tensorflow configuring step, it didnt recoginized python3.5. Actually, it works only on Windows.
+
+install bazel:
+$ sudo apt install unzip openjdk-8-jdk protobuf-compiler zip g++ zlib1g-dev unzip
+- need to add env variables for JDK on .bashrc
+$ sudo vi .bashrc
+	export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-ppc64el
+	export JRE_HOME=${JAVA_HOME}/jre
+	export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+	export PATH=${JAVA_HOME}/bin:$PATH
+$ mkdir bazel
+$ cd bazel
+$ wget -c https://github.com/bazelbuild/bazel/releases/download/0.9.0/bazel-0.9.0-dist.zip #tried .deb file and .sh script, but both are set up for some kinda arch not compatible with ppc64le. Therefore, we have to build it from scratch. It does take a while.
+$ unzip bazel-0.9.0-dist.zip
+$ ./compile.sh
+
+***** Installing: *****
+
+$ cd ~/tensorflow
+$ ./configure
+	/usr/bin/python2.7
+	/usr/lib/python2.7/dist-packages
+	y
+	y
+	y
+	y
+	n
+	n
+	n
+	n
+	n
+	n
+	-mcpu=native
+	n
+		
+To build it, the following command was used:
+bazel build --copt="-mcpu=native" --jobs 1 --local_resources 2048,0.5,1.0 //tensorflow/tools/pip_package:build_pip_package #it takes a while
+
+$ bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg #creates the pip package
+
+$ sudo pip install /tmp/tensorflow_pkg/tensorflow-1.5.0rc0-cp27-cp27mu-linux_ppc64le.whl #installs the pip package. This name depends on your operating system, Python version and CPU only vs. GPU support. Therefore, check it out its name before this step. 
+
+***** Validate installation *****
+$ cd ~ #if you try to import tensorflow into its own directory, you might find an error "ImportError: No module named platform".
+$ python
+	# Python
+	< import tensorflow as tf
+	< hello = tf.constant('Hello, TensorFlow!')
+	< sess = tf.Session()
+	< print(sess.run(hello))
+	> Hello, TensorFlow!
+
+links for build issues:
+	https://github.com/tensorflow/tensorflow/issues/14540
+	https://github.com/tensorflow/tensorflow/issues/349
+
+For GPU Usage: see the link on the 1st line
